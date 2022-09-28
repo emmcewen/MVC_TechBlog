@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { Post, Comment, User } = require('../models');
 const withAuth = require('../utils/auth');
 
-router.get('/', async (req, res) => {
+router.get('/login', async (req, res) => {
     res.render('login')
 })
 
@@ -10,35 +10,34 @@ router.get('/signup', async (req, res) => {
     res.render('signup')
 })
 
-router.get('/newpost', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
-        const postData = await PostData.findAll({
-            include: [
-                model: User,
-                attributes: ['username'],
-            },
+        const post = await Post.findAll({
+            include: 
+              [User],
 });
 
-const stories = postData.map((post) => post.get({
+const posts = postData.map((post) => post.get({plain:true}));
     console.log(posts)
     res.render('homepage', {
         posts,
         logged_in: req.session.logged_in
-    }
+    },
     {
             catch(err) {
                 res.status(500).json(err);
 
             }
         },
-router.post('/post/:id', async (req, res) => {
-            const PostData = await NewPost.findByPk(req.params.id, {
+router.get('/post/:id', async (req, res) => {
+            const PostData = await Post.findByPk(req.params.id, {
                 include: [
                     {
                         model: User,
                         attribute: ["name"],
                     },
                 ],
+            });
 
                 const post = postData.get({ plain: true });
                 res.render('posts', {

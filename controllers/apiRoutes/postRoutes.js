@@ -3,8 +3,11 @@ const {Post} =require('../../models')
 const withAuth = require('../../utils')
 
 router.post ('/', withAuth, async (req,res)=>{
-    ...req.body,
-    user_id: req.session.user_id,
+    try {
+        const postData =await Post.findAll ({
+            where: {
+                user_id: req.session.user_id,
+            },
 });
 
 res.status(200).json(newPost);
